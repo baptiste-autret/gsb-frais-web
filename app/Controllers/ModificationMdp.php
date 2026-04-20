@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Libraries\Gsb_lib;
@@ -40,6 +41,23 @@ class ModificationMdp extends BaseController
             . view('structures/page_pied');
     }
 
+    private function verification_mdp($mdp, $nvMdp, $confirmerNvMdp)
+    {
+        if ($mdp === $nvMdp) {
+            return false;
+        }
+
+        if ($nvMdp !== $confirmerNvMdp) {
+            return false;
+        }
+
+        if (strlen($nvMdp) < 12) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Valide la saisie du formulaire de connexion
      */
@@ -72,24 +90,23 @@ class ModificationMdp extends BaseController
 
 
         $utilisateur = $this->gsb_model->get_infos_utilisateur($login, $mdp);
-        
+
         if ($utilisateur) {
 
-            $this->gsb_model->update_mdp($login, $nvMdp);
-            
-            session()->set([
-                'idUtilisateur' => $utilisateur['idutilisateur'],
-                'login' => $utilisateur['login'],
-                'nom' => $utilisateur['nom'],
-                'prenom' => $utilisateur['prenom'],
-                'role' => $utilisateur['idrole'],
-                'libellerole' => $utilisateur['libellerole'],
-                'isLoggedIn' => true
-            ]);
+            if ($this->verification_mdp($mdp, $nvMdp, $this->request->getPost('txtConfirmerNvMdp'))) {
+                $this->gsb_model->update_mdp($login, $nvMdp);
 
-            return redirect()->to('/accueil')->withInput()->with('validation', 'Le mot de passe a été changé avec succès');
+                return redirect()->to('/accueil')->with('infos', 'Le mot de passe a été changé avec succès');
+            } else {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('erreurs', "Votre mot de passe n'est pas assez fort ou est le même que le précédent.");
+            }
+        } else {
+
+            return redirect()->back()
+                ->withInput()
+                ->with('erreurs', "Mot de passe actuel incorrect.");
         }
-
-        return redirect()->back()->withInput()->with('erreurs', "Votre mot de passe n'est pas assez fort ou est le même que le précédent. Veuillez réessayer.");
     }
 }

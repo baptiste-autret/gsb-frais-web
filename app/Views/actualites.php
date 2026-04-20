@@ -7,15 +7,39 @@
         <?php foreach ($actualite as $actu_actuelle) { ?>
             <div class="carousel-item <?= $isFirst ? 'active' : '' ?>">
                 <div class="d-flex justify-content-center">
-                    <div class="card shadow-sm" style="max-width: 700px;">
-                        <img src="<?= $actu_actuelle['image'] ?>" class="card-img-top" alt="Image de l'article">
-                        <div class="card-body text-center">
-                            <h5 class="card-title text-primary"><?= $actu_actuelle['titreArticle'] ?></h5>
-                            <p class="card-text"><?= $actu_actuelle['description'] ?></p>
-                            <p class="card-text"><small class="text-muted">Publié le : <?= $actu_actuelle['date'] ?></small></p>
-                            <a href="<?= $actu_actuelle['lien'] ?>" class="btn btn-info text-white" target="_blank">Lire l'article</a>
+
+                    <div class="card shadow-sm h-100" style="max-width: 700px;">
+
+                        <img src="<?= $actu_actuelle['image'] ?>"
+                            class="card-img-top"
+                            style="height: 350px; object-fit: cover;"
+                            alt="Image de l'article">
+
+                        <div class="card-body text-center d-flex flex-column">
+
+                            <h5 class="card-title text-primary">
+                                <?= $actu_actuelle['titreArticle'] ?>
+                            </h5>
+
+                            <p class="card-text">
+                                <?= $actu_actuelle['description'] ?>
+                            </p>
+
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Publié le : <?= $actu_actuelle['date'] ?>
+                                </small>
+                            </p>
+
+                            <a href="<?= $actu_actuelle['lien'] ?>"
+                                class="btn btn-info text-white mt-auto"
+                                target="_blank">
+                                Lire l'article
+                            </a>
+
                         </div>
                     </div>
+
                 </div>
             </div>
             <?php $isFirst = false; ?>
@@ -23,15 +47,17 @@
     </div>
 
     <!-- Bouton précédent -->
-    <button class="carousel-control-prev me-5" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+    <a class="carousel-control-prev"
+        href="#carouselExampleAutoplaying" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
         <span class="visually-hidden">Précédent</span>
-    </button>
+    </a>
 
     <!-- Bouton suivant -->
-    <button class="carousel-control-next ms-5" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+    <a class="carousel-control-next"
+        href="#carouselExampleAutoplaying" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
         <span class="visually-hidden">Suivant</span>
-    </button>
+    </a>
 
 </div>
