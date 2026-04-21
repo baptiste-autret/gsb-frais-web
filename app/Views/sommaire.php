@@ -11,7 +11,7 @@
         </div>
         <ul class="menuList">
             <li>
-                <?= anchor('modificationMdp', 'Modifier le mot de passe', ['title' => 'Modifier le mot de passe']) ?>
+                <?= anchor('modificationMdp_no', 'Modifier le mot de passe', ['title' => 'Modifier le mot de passe']) ?>
                 <?= anchor('connexion/deconnexion', 'Déconnexion', ['title' => 'Se déconnecter']) ?>
             </li>
         </ul>

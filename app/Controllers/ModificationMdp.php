@@ -1,5 +1,7 @@
 <?php
 
+// to-do: seulement pour les visiteurs médicale ou comptable 
+
 namespace App\Controllers;
 
 use App\Libraries\Gsb_lib;
@@ -18,41 +20,39 @@ class ModificationMdp extends BaseController
         $this->gsbLib = new Gsb_lib();
     }
 
-    /** Méthode par défaut */
-    public function index()
-    {
-        // Vérifie si l’utilisateur est connecté
-        if (!session()->get('isLoggedIn')) {
-            return redirect()->to('/');
-        }
-    }
-
     /**
      * Affiche l’écran de connexion
      */
-    public function modification_normale()
+    public function modification_normale($obligation)
     {
-        $data['listemenus'] = $this->gsbLib->get_menus(session()->get('role'));
+        if ($obligation == "true") {
+            return view('structures/page_entete')
+                . view('structures/messages')
+                . view('modifierMDP')
+                . view('structures/page_pied');
+        } else {
+            $data['listemenus'] = $this->gsbLib->get_menus(session()->get('role'));
 
-        return view('structures/page_entete')
-            . view('structures/messages')
-            . view('sommaire', $data)
-            . view('modifierMDP')
-            . view('structures/page_pied');
+            return view('structures/page_entete')
+                . view('structures/messages')
+                . view('sommaire', $data)
+                . view('modifierMDP')
+                . view('structures/page_pied');
+        }
     }
 
     private function verification_mdp($mdp, $nvMdp, $confirmerNvMdp)
     {
         if ($mdp === $nvMdp) {
-            return false;
+            return "mdp_identique";
         }
 
         if ($nvMdp !== $confirmerNvMdp) {
-            return false;
+            return "nv_mdp_différent";
         }
 
         if (strlen($nvMdp) < 12) {
-            return false;
+            return "mdp_trop_court";
         }
 
         return true;
@@ -93,14 +93,24 @@ class ModificationMdp extends BaseController
 
         if ($utilisateur) {
 
-            if ($this->verification_mdp($mdp, $nvMdp, $this->request->getPost('txtConfirmerNvMdp'))) {
+            $resultat = $this->verification_mdp($mdp, $nvMdp, $this->request->getPost('txtConfirmerNvMdp'));
+
+            if ($resultat === true) {
                 $this->gsb_model->update_mdp($login, $nvMdp);
 
                 return redirect()->to('/accueil')->with('infos', 'Le mot de passe a été changé avec succès');
+            } elseif ($resultat === "mdp_identique") {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('erreurs', "Votre nouveau mot de passe ne peut pas être le même que l'ancien.");
+            } elseif ($resultat === "nv_mdp_différent") {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('erreurs', "Le nouveau mot de passe et la confirmation ne correspondent pas.");
             } else {
                 return redirect()->back()
                     ->withInput()
-                    ->with('erreurs', "Votre mot de passe n'est pas assez fort ou est le même que le précédent.");
+                    ->with('erreurs', "Le mot de passe doit contenir au moins 12 caractères.");
             }
         } else {
 

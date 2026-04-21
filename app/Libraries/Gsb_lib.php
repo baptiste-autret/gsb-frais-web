@@ -10,7 +10,7 @@ class Gsb_lib
     public function __construct()
     {
         // session déjà disponible via service
-        session(); 
+        session();
         setlocale(LC_TIME, "fr_FR.utf8", "fra_fra");
     }
 
@@ -22,7 +22,7 @@ class Gsb_lib
     }
 
     /** Retourne le couple annee/mois aaaamm selon une date jj/mm/aaaa (TODO pour date passée) */
-    public function get_annee_mois(string $date = null): string
+    public function get_annee_mois(): string
     {
         return date(format: "Ym");
     }
@@ -33,7 +33,7 @@ class Gsb_lib
     }
     public function get_mois_from_anneemois(string $annee_mois): string
     {
-        $num_mois = substr($annee_mois, 4, strlen($annee_mois)-4);
+        $num_mois = substr($annee_mois, 4, strlen($annee_mois) - 4);
         return $num_mois;
     }
 
@@ -60,17 +60,44 @@ class Gsb_lib
 
     public function get_menus(string $idRole)
     {
-    	$listes = ["VS" => [
-        	["route" => "accueil", "texte" => "Accueil"],
-        	["route" => "gererfrais", "texte" => "Saisie fiche de frais"],
-        	["route" => "etatfrais", "texte" => "Mes fiches de frais"]
-        ],
-    	"CP" => [
-        	["route" => "accueil", "texte" => "Accueil"],
-        	["route" => "validation", "texte" => "Validation fiches de frais"],
-        	["route" => "suivi", "texte" => "Suivi fiches de frais"]
-        ]];
-    
+        $listes = [
+            "VS" => [
+                ["route" => "accueil", "texte" => "Accueil"],
+                ["route" => "gererfrais", "texte" => "Saisie fiche de frais"],
+                ["route" => "etatfrais", "texte" => "Mes fiches de frais"]
+            ],
+
+
+
+
+            // to-do: Vérifier les permissions d'accès à une page en fonction du rôle de l'utilisateur
+
+            "DR" => [
+                ["route" => "accueil", "texte" => "Accueil"],
+                ["route" => "gererfrais", "texte" => "Saisie fiche de frais"],
+                ["route" => "etatfrais", "texte" => "Mes fiches de frais"]
+            ],
+            "RS" => [
+                ["route" => "accueil", "texte" => "Accueil"],
+                ["route" => "gererfrais", "texte" => "Saisie fiche de frais"],
+                ["route" => "etatfrais", "texte" => "Mes fiches de frais"]
+            ],
+            "SC" => [
+                ["route" => "accueil", "texte" => "Accueil"],
+                ["route" => "gererfrais", "texte" => "Saisie fiche de frais"],
+                ["route" => "etatfrais", "texte" => "Mes fiches de frais"]
+            ],
+
+
+
+
+            "CP" => [
+                ["route" => "accueil", "texte" => "Accueil"],
+                ["route" => "validation", "texte" => "Validation fiches de frais"],
+                ["route" => "suivi", "texte" => "Suivi fiches de frais"]
+            ]
+        ];
+
         return $listes[$idRole];
     }
 }

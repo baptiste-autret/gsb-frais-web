@@ -227,7 +227,8 @@ class GsbModel extends Model
             ->getResultArray();
     }
 
-    public function update_mdp($login, $nvMdp) {
+    public function update_mdp($login, $nvMdp)
+    {
         $majOK = true;
         $res = $this->db->table('utilisateur')->update(
             set: ['mdp' => $nvMdp, 'dernier_changement_mdp' => date('Y-m-d')],
@@ -237,5 +238,16 @@ class GsbModel extends Model
             $majOK = false;
         }
         return $majOK;
+    }
+
+    public function get_date_dernier_changement_mdp($login)
+    {
+        $row = $this->db->table('utilisateur')
+            ->select('dernier_changement_mdp')
+            ->where('login', $login)
+            ->get()
+            ->getRowArray();
+
+            return $row['dernier_changement_mdp'];
     }
 }

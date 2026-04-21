@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\GsbModel;
@@ -51,14 +52,28 @@ class Connexion extends BaseController
 
         $utilisateur = $this->gsb_model->get_infos_utilisateur($login, $mdp);
 
+
+
         if ($utilisateur) {
+
             session()->set([
                 'idUtilisateur' => $utilisateur['idutilisateur'],
-                'login' => $utilisateur['login'],
                 'nom' => $utilisateur['nom'],
                 'prenom' => $utilisateur['prenom'],
-                'role' => $utilisateur['idrole'],
                 'libellerole' => $utilisateur['libellerole'],
+                'login' => $utilisateur['login'],
+                'role' => $utilisateur['idrole']
+            ]);
+
+            $dernierChangementMdp = date_create($this->gsb_model->get_date_dernier_changement_mdp($utilisateur['login']));
+            $currentDate = date_create(date('Y-m-d'));
+            $difference_date = date_diff($dernierChangementMdp, $currentDate);
+
+            if ($difference_date->format('%m') >= 6) {
+                return redirect()->to('modificationMdp_o')->with('erreurs', 'Votre mot de passe a expiré. Veuillez le modifier.');
+            }
+
+            session()->set([
                 'isLoggedIn' => true
             ]);
             return redirect()->to('/accueil');
